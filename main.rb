@@ -38,6 +38,9 @@ class Tpdf < TranspdfGlade
     @logfile.set_txt(@glade["pdf_txt"].buffer.text)
     @logfile.set_memo(@glade["myspace"].buffer.text)
     @logfile.to_yaml(@glade["FileName"].text)
+    if File.exist?("#{@glade["FileName"].text}.txt")
+      File.delete("#{@glade["FileName"].text}.txt")
+    end
     Gtk.main_quit
   end
 
