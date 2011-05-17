@@ -14,7 +14,7 @@ class TranspdfGlade
     @glade = GladeXML.new(path_or_data, root, domain, localedir, flag) {|handler| method(handler)}
     
   end
-
+  
   def on_close_ok_clicked(widget)
     puts "on_close_ok_clicked() is not implemented yet."
   end
@@ -27,8 +27,14 @@ class TranspdfGlade
   def on_window1_delete_event(widget, arg0)
     puts "on_window1_delete_event() is not implemented yet."
   end
+  def on_pdf_txt_button_release_event(widget, arg0)
+    puts "on_pdf_txt_button_release_event() is not implemented yet."
+  end
   def on_cancelB_clicked(widget)
     puts "on_cancelB_clicked() is not implemented yet."
+  end
+  def on_about_activate(widget)
+    puts "on_about_activate() is not implemented yet."
   end
   def on_close_no_clicked(widget)
     puts "on_close_no_clicked() is not implemented yet."
