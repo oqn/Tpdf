@@ -23,6 +23,24 @@ class Tpdf < TranspdfGlade
 
     @filename = nil
     @logfile = DataFile.new
+
+    add_accel_keys
+  end
+
+  def add_accel_keys
+    ag = Gtk::AccelGroup.new
+    ag.connect(Gdk::Keyval::GDK_M, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
+      @glade["myspace"].set_focus(true)
+    }
+    ag.connect(Gdk::Keyval::GDK_I, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
+      trans = "|英|\"" + @glade["translated_txt"].buffer.text + "\"\n"
+
+      a = @glade["pdf_txt"].buffer.selection_bounds
+      str = "|日|\"" + @glade["pdf_txt"].buffer.get_slice(a[0],a[1],true) + "\"\n"
+      @glade["myspace"].buffer.insert_at_cursor(trans + str)
+    }
+
+    @glade["window1"].add_accel_group(ag)
   end
 
   #メインウィンドウの閉じるボタンを押したときに呼び出されるシグナル。
