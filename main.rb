@@ -33,13 +33,12 @@ class Tpdf < TranspdfGlade
       @glade["myspace"].set_focus(true)
     }
     ag.connect(Gdk::Keyval::GDK_I, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
-      trans = "|英|\"" + @glade["translated_txt"].buffer.text + "\"\n"
+      trans = "|日|\"" + @glade["translated_txt"].buffer.text + "\"\n"
 
       a = @glade["pdf_txt"].buffer.selection_bounds
-      str = "|日|\"" + @glade["pdf_txt"].buffer.get_slice(a[0],a[1],true) + "\"\n"
+      str = "|英|\"" + @glade["pdf_txt"].buffer.get_slice(a[0],a[1],true) + "\"\n"
       @glade["myspace"].buffer.insert_at_cursor(trans + str)
     }
-
     @glade["window1"].add_accel_group(ag)
   end
 
@@ -89,6 +88,11 @@ class Tpdf < TranspdfGlade
     end
   end
 
+  
+  def on_FileChooserDialog_file_activated(widget)
+    on_openB_clicked(widget)
+  end
+
   #メニューバーの[ファイル]->[終了]で呼び出されるシグナル。
   #メインウィンドウの閉じるボタンを押したときに呼び出されるシグナルを呼ぶ。
   def on_quit_tpdf_activate(widget)
@@ -124,10 +128,43 @@ class Tpdf < TranspdfGlade
       @glade["FileChooserDialog"].hide
     end
   end
+
+  def on_bSearch_clicked(widget)
+    search_text(@glade["pdf_txt"],@glade["search_txt"].text,1,false)
+  end
   
+  def search_text(tArea,keyword,direction,nx)
+    search_flags = Gtk::TextIter::SEARCH_TEXT_ONLY
+    iter = tArea.buffer.get_iter_at_mark(tArea.buffer.get_mark("insert"))
+
+    if @glade["chbBackSearch"].active?
+      match_iters = iter.backward_search(keyword, search_flags)
+      nxt_iter = match_iters if match_iters
+    else
+      match_iters = iter.forward_search(keyword, search_flags)
+      nxt_iter = [match_iters[1], match_iters[0]] if match_iters
+    end
+
+    if match_iters
+      iter_on_screen(nxt_iter[0], "insert")
+      tArea.buffer.move_mark("selection_bound", nxt_iter[1])
+    else
+      @glade["SearchEndDialog"].show_all
+    end
+  end
+
+  def on_bSearchEndOk_clicked(widget)
+    @glade["SearchEndDialog"].hide
+  end
+
+  def iter_on_screen(iter, mark_str)
+    @glade["pdf_txt"].buffer.place_cursor(iter) 
+    @glade["pdf_txt"].scroll_mark_onscreen(@glade["pdf_txt"].buffer.get_mark(mark_str))
+  end
+
   #LinuxOSの端末上でで使えるpdftotextを使ってPDFファイルからテキストファイルを生成する。
   def pdf2txt(fname)
-    result = `pdftotext #{fname}`
+    result = `pdftotext -nopgbrk #{fname}`
     @glade["FileChooserDialog"].hide
     dir, name = File::split(fname)
     return "#{dir}/#{File::basename(fname,".*")}.txt"

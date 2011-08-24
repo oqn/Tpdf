@@ -39,6 +39,9 @@ class TranspdfGlade
   def on_close_no_clicked(widget)
     puts "on_close_no_clicked() is not implemented yet."
   end
+  def on_FileChooserDialog_file_activated(widget)
+    puts "on_FileChooserDialog_file_activated() is not implemented yet."
+  end
   def on_quit_tpdf_activate(widget)
     puts "on_quit_tpdf_activate() is not implemented yet."
   end
