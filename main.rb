@@ -32,6 +32,17 @@ class Tpdf < TranspdfGlade
     ag.connect(Gdk::Keyval::GDK_M, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
       @glade["myspace"].set_focus(true)
     }
+    ag.connect(Gdk::Keyval::GDK_R, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
+      @glade["chbBackSearch"].active = true
+      @glade["search_txt"].set_focus(true)
+    }
+    ag.connect(Gdk::Keyval::GDK_F, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
+      @glade["chbBackSearch"].active = false
+      @glade["search_txt"].set_focus(true)
+    }
+    ag.connect(Gdk::Keyval::GDK_S, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
+      search_text(@glade["pdf_txt"],@glade["search_txt"].text,1,false)
+    }
     ag.connect(Gdk::Keyval::GDK_I, Gdk::Window::CONTROL_MASK, Gtk::ACCEL_VISIBLE){ 
       trans = "|日|\"" + @glade["translated_txt"].buffer.text + "\"\n"
 
